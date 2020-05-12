@@ -1,0 +1,23 @@
+version: "3"
+services:
+  flask:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DETECTION_IN_QUEUE_NAME
+    volumes:
+      - ./gtfs:/gtfs
+  database:
+    image: kartoza/postgis:11.5-2.5
+    environment:
+      - POSTGRES_USER=hans
+      - POSTGRES_PASS=password
+      - POSTGRES_DBNAME=gtfs
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    ports:
+        - "5432:5432"
+    volumes:
+        - ./gtfs:/gtfs
+        - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
